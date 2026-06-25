@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Inverter Manual Hub - คู่มืออินเวอร์เตอร์ใน ksl wsp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js สำหรับดู PDF ในเว็บ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --secondary: #7c3aed;
+            --accent: #06ffa5;
+            --warning: #ffb800;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f1f5f9;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Kanit', 'Prompt', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Electrical Background */
+        .electrical-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 20%, rgba(6, 255, 165, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f172a 0%, #020617 100%);
+        }
+
+        .circuit-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath d='M20 20 L60 20 L60 60 M60 60 L100 60 L100 100 M100 100 L140 100 M140 100 L140 140 L180 140 M40 80 L80 80 L80 120 M120 40 L160 40 L160 80 M20 160 L60 160 L60 180 M140 20 L180 20 M20 100 L60 100 M100 20 L140 20 M100 180 L140 180' stroke='%2300d4ff' fill='none' stroke-width='2'/%3E%3Ccircle cx='20' cy='20' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='60' cy='60' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='100' cy='100' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='140' cy='140' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='180' cy='140' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='80' cy='80' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='80' cy='120' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='160' cy='40' r='4' fill='%2300d4ff'/%3E%3Ccircle cx='160' cy='80' r='4' fill='%2300d4ff'/%3E%3C/svg%3E");
+            animation: circuitFlow 30s linear infinite;
+        }
+
+        @keyframes circuitFlow {
+            0% { background-position: 0 0; }
+            100% { background-position: 200px 200px; }
+        }
+
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            50% { transform: translateY(-100vh) translateX(50px); }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1581092160607-ee22621dd750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            filter: brightness(0.4) saturate(1.2);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(15, 23, 42, 0.85) 0%,
+                rgba(2, 6, 23, 0.7) 50%,
+                rgba(124, 58, 237, 0.5) 100%
+            );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 1200px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .hero-badge .pulse {
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideUp 0.8s ease-out 0.2s backwards;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: slideUp 0.8s ease-out 0.4s backwards;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            animation: slideUp 0.8s ease-out 0.6s backwards;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .search-container {
+            max-width: 700px;
+            margin: -40px auto 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 8px 8px 30px;
+            border-radius: 60px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .search-box .icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            padding: 15px 10px;
+            background: transparent;
+            color: var(--light);
+            font-family: inherit;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .brand-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 50px;
+            justify-content: center;
+        }
+
+        .brand-btn {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            color: var(--light);
+            font-family: inherit;
+        }
+
+        .brand-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .brand-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .brand-section {
+            margin-bottom: 50px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-header {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 70%
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .brand-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .model-count {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .models-grid {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+            padding: 30px;
+            border-radius: 0 0 20px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .model-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .model-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 212, 255, 0.1),
+                transparent
+            );
+            transition: left 0.6s;
+        }
+
+        .model-card:hover::before {
+            left: 100%;
+        }
+
+        .model-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .model-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .model-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--light);
+        }
+
+        .model-card p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+
+        .file-info .icon {
+            color: var(--accent);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-group-full {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, var(--primary), #0099cc);
+            color: white;
+        }
+
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--accent), #00cc88);
+            color: var(--dark);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(6, 255, 165, 0.4);
+        }
+
+        .btn-translate {
+            background: linear-gradient(135deg, var(--warning), #ff8800);
+            color: var(--dark);
+        }
+
+        .btn-translate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 184, 0, 0.4);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            display: none;
+        }
+
+        .no-results .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Modern Modal with PDF.js */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .modal-title-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .modal-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: inherit;
+        }
+
+        .modal-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-btn.close {
+            background: rgba(239, 68, 68, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            justify-content: center;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+
+        .modal-btn.close:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: rotate(90deg);
+        }
+
+        .page-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow: auto;
+            background: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .pdf-canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pdf-canvas {
+            max-width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            background: white;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        /* Language Selector Modal */
+        .lang-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 1002;
+            min-width: 300px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lang-modal.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .lang-modal h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .lang-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .lang-option {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--light);
+            font-family: inherit;
+        }
+
+        .lang-option:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .lang-option .flag {
+            font-size: 1.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        footer p {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        footer .heart {
+            color: #ef4444;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: 60vh;
+                min-height: 400px;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .models-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .brand-header {
+                padding: 20px;
+                flex-wrap: wrap;
+            }
+
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                flex-direction: column;
+                padding: 15px;
+                border-radius: 20px;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+
+            .modal-header {
+                padding: 10px 15px;
+            }
+
+            .modal-header h3 {
+                font-size: 1rem;
+            }
+
+            .modal-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Feature Badge */
+        .feature-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, var(--warning), #ff8800);
+            color: var(--dark);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="electrical-bg"></div>
+    <div class="circuit-pattern"></div>
+
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 8s;"></div>
+    <div class="particle" style="left: 85%; animation-delay: 10s;"></div>
+    <div class="particle" style="left: 95%; animation-delay: 12s;"></div>
+
+    <section class="hero">
+        <div class="hero-image"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="pulse"></span>
+                <span>INVERTERMANUAL FOR ELECTRICAL & INSTRUMENT TECHNICHIAN!</span>
+            </div>
+            <h1>⚡ Inverter Manual Hub</h1>
+            <p>รวมคู่มือการใช้งาน Motor Drive Inverter KSL WSP<br>ดูออนไลน์ ดาวน์โหลด และแปลเป็นไทยได้ทันที</p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalBrands">10</div>
+                    <div class="stat-label">แบรนด์</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalModels">32</div>
+                    <div class="stat-label">รุ่น</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">🇹🇭</div>
+                    <div class="stat-label">แปลไทยได้</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="search-container">
+            <div class="search-box">
+                <span class="icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="ค้นหายี่ห้อหรือรุ่น (เช่น ABB, ACS580, iP5A)">
+                <button class="search-btn">ค้นหา</button>
+            </div>
+        </div>
+
+        <div class="brand-filter">
+            <button class="brand-btn active" data-brand="all">🌐 ทั้งหมด</button>
+            <button class="brand-btn" data-brand="abb">ABB</button>
+            <button class="brand-btn" data-brand="danfoss">Danfoss</button>
+            <button class="brand-btn" data-brand="invt">INVT</button>
+            <button class="brand-btn" data-brand="ls">LS Electric</button>
+            <button class="brand-btn" data-brand="holip">HOLIP</button>
+            <button class="brand-btn" data-brand="vacon">VACON</button>
+
+            <button class="brand-btn" data-brand="emerson">EMERSON</button>
+            <button class="brand-btn" data-brand="mitsubishi">Mitsubishi</button>
+            <button class="brand-btn" data-brand="delta">Delta</button>
+           
+        </div>
+
+        <div id="brandsContainer">
+            <div style="text-align: center; padding: 60px;">
+                <div class="loading-spinner" style="margin: 0 auto;"></div>
+                <p style="margin-top: 20px; opacity: 0.7;">กำลังโหลด...</p>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResults">
+            <div class="icon">🔍</div>
+            <h3>ไม่พบผลลัพธ์ที่ค้นหา</h3>
+            <p>ลองค้นหาด้วยคำอื่น หรือเลือกแบรนด์จากด้านบน</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Inverter Manual Hub | สร้างด้วย <span class="heart">❤️</span> สำหรับช่างไฟฟ้าไทย</p>
+    </footer>
+
+    <!-- PDF Viewer Modal -->
+    <div class="modal" id="pdfModal">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">กำลังโหลด PDF...</div>
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <h3 id="modalTitle">📄 คู่มือ</h3>
+                </div>
+                <div class="modal-controls">
+                    <button class="modal-btn" id="prevPage">◀ ก่อนหน้า</button>
+                    <span class="page-info" id="pageInfo">-</span>
+                    <button class="modal-btn" id="nextPage">ถัดไป ▶</button>
+                    <button class="modal-btn" id="zoomOut">➖</button>
+                    <button class="modal-btn" id="zoomIn">➕</button>
+                    <button class="modal-btn" onclick="downloadCurrentPDF()">⬇️ ดาวน์โหลด</button>
+                    <button class="modal-btn" onclick="translateCurrentPDF()">🌐 แปลไทย</button>
+                    <button class="modal-btn close" onclick="closeModal()">✕</button>
+                </div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="pdf-canvas-container" id="pdfContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Selector Modal -->
+    <div class="lang-modal" id="langModal">
+        <h3>🌐 เลือกภาษาที่ต้องการแปล</h3>
+        <div class="lang-options">
+            <button class="lang-option" onclick="openGoogleTranslate('th')">
+                <span class="flag">🇹🇭</span>
+                <span>ภาษาไทย</span>
+            </button>
+            <button class="lang-option" onclick="openGoogleTranslate('en')">
+                <span class="flag">🇬🇧</span>
+                <span>English (ต้นฉบับ)</span>
+            </button>
+            <button class="lang-option" onclick="openGoogleTranslate('zh-CN')">
+                <span class="flag">🇨🇳</span>
+                <span>中文 (จีน)</span>
+            </button>
+            <button class="lang-option" onclick="openGoogleTranslate('ja')">
+                <span class="flag">🇯🇵</span>
+                <span>日本語 (ญี่ปุ่น)</span>
+            </button>
+            <button class="lang-option" onclick="openGoogleTranslate('ko')">
+                <span class="flag">🇰🇷</span>
+                <span>한국어 (เกาหลี)</span>
+            </button>
+        </div>
+        <button class="modal-btn" style="margin-top: 20px; width: 100%;" onclick="closeLangModal()">✕ ปิด</button>
+    </div>
+
+    <script>
+        // Inverter Database
+        const inverterData = [
+            {
+                brand: 'abb',
+                brandName: 'ABB',
+                color: '#FF0000',
+                models: [
+                    { name: 'ACS580', desc: 'General purpose drive, 0.75-500 kW', size: '15.2 MB', pdf: 'abb-acs580.pdf', icon: '⚙️' },
+                    { name: 'ACS880', desc: 'Industrial drive, single drive', size: '22.8 MB', pdf: 'abb-acs880.pdf', icon: '🏭' },
+                    { name: 'ACS380', desc: 'Machinery drive', size: '12.5 MB', pdf: 'abb-acs380.pdf', icon: '🔧' },
+                    { name: 'ACS180', desc: 'Compact machinery drive', size: '8.3 MB', pdf: 'abb-acs180.pdf', icon: '📦' },
+                    { name: 'ACH580', desc: 'HVAC drive', size: '14.7 MB', pdf: 'abb-ach580.pdf', icon: '❄️' }
+                ]
+            },
+            {
+                brand: 'danfoss',
+                brandName: 'Danfoss',
+                color: '#E31E24',
+                models: [
+                    { name: 'VLT FC 302', desc: 'AutomationDrive - High performance', size: '18.4 MB', pdf: 'danfoss-fc302.pdf', icon: '⚡' },
+                    { name: 'VLT FC 102', desc: 'HVAC Drive for buildings', size: '16.2 MB', pdf: 'danfoss-fc102.pdf', icon: '🏢' },
+                    { name: 'VLT FC 202', desc: 'Aqua Drive for water/wastewater', size: '14.8 MB', pdf: 'danfoss-fc202.pdf', icon: '💧' },
+                    { name: 'VLT FC 51', desc: 'Micro Drive - Compact', size: '6.5 MB', pdf: 'danfoss-fc51.pdf', icon: '📱' }
+                ]
+            },
+            {
+                brand: 'invt',
+                brandName: 'INVT',
+                color: '#0066CC',
+                models: [
+                    { name: 'GD200A', desc: 'General purpose vector control', size: '12.3 MB', pdf: 'invt-gd200a.pdf', icon: '🎯' },
+                    { name: 'GD350', desc: 'High performance inverter', size: '18.6 MB', pdf: 'invt-gd350.pdf', icon: '🚀' },
+                    { name: 'GD20', desc: 'Compact general purpose', size: '8.9 MB', pdf: 'invt-gd20.pdf', icon: '💎' },
+                    { name: 'GD10', desc: 'Mini vector inverter', size: '5.2 MB', pdf: 'invt-gd10.pdf', icon: '✨' },
+                    { name: 'CHF100A', desc: 'Vector control inverter', size: '10.4 MB', pdf: 'invt-chf100a.pdf', icon: '🔋' }
+                ]
+            },
+            {
+                brand: 'ls',
+                brandName: 'LS Electric',
+                color: '#003DA5',
+                models: [
+                    { name: 'iP5A', desc: 'High performance vector control', size: '14.2 MB', pdf: 'ls-ip5a.pdf', icon: '🎛️' },
+                    { name: 'iC5', desc: 'Compact general purpose', size: '9.8 MB', pdf: 'ls-ic5.pdf', icon: '📐' },
+                    { name: 'iG5A', desc: 'General purpose drive', size: '11.5 MB', pdf: 'ls-ig5a.pdf', icon: '⚙️' },
+                    { name: 'iV5', desc: 'High performance inverter', size: '16.7 MB', pdf: 'ls-iv5.pdf', icon: '🏆' },
+                    { name: 'iS7', desc: 'High performance vector control', size: '19.3 MB', pdf: 'ls-is7.pdf', icon: '💫' }
+                ]
+            },
+                        
+            {
+                brand: 'mitsubishi',
+                brandName: 'Mitsubishi',
+                color: '#E60012',
+                models: [
+                    { name: 'FR-A800', desc: 'High performance inverter', size: '21.3 MB', pdf: 'mitsubishi-fra800.pdf', icon: '💎' },
+                    { name: 'FR-E800', desc: 'Compact high performance', size: '15.8 MB', pdf: 'mitsubishi-fre800.pdf', icon: '🎯' },
+                    { name: 'FR-D700', desc: 'General purpose inverter', size: '12.4 MB', pdf: 'mitsubishi-frd700.pdf', icon: '⚡' }
+                ]
+            },
+                        
+                        {
+                brand: 'delta',
+                brandName: 'Delta',
+                color: '#003DA5',
+                models: [
+                    { name: 'C2000 Plus', desc: 'High performance vector drive', size: '19.2 MB', pdf: 'delta-c2000.pdf', icon: '🚀' },
+                    { name: 'MS300', desc: 'Compact high performance', size: '13.6 MB', pdf: 'delta-ms300.pdf', icon: '💎' },
+                    { name: 'VFD-E', desc: 'General purpose drive', size: '10.8 MB', pdf: 'delta-vfd-e.pdf', icon: '⚙️' }
+                ]
+            },
+            
+// ============= เพิ่ม 3 แบรนด์ใหม่ =============
+{
+    brand: 'holip',
+    brandName: 'HOLIP',
+    color: '#003399',
+    models: [
+        { 
+            name: 'HLP-C100', 
+            desc: 'General purpose vector control inverter, 0.75-400 kW', 
+            size: '11.8 MB', 
+            pdf: 'holip-hlp-c100.pdf', 
+            icon: '⚡' 
+        },
+        { 
+            name: 'HLP-A', 
+            desc: 'High performance AC drive', 
+            size: '9.5 MB', 
+            pdf: 'holip-hlp-a.pdf', 
+            icon: '🎛️' 
+        },
+        { 
+            name: 'HLP-NV', 
+            desc: 'Compact general purpose drive', 
+            size: '8.2 MB', 
+            pdf: 'holip-hlp-nv.pdf', 
+            icon: '💎' 
+        },
+        { 
+            name: 'HLP-SP110', 
+            desc: 'Fan and pump inverter', 
+            size: '10.1 MB', 
+            pdf: 'holip-hlp-sp110.pdf', 
+            icon: '💨' 
+        },
+        { 
+            name: 'HLP-CB', 
+            desc: 'Built-in EMC filter drive', 
+            size: '9.8 MB', 
+            pdf: 'holip-hlp-cb.pdf', 
+            icon: '🔌' 
+        }
+    ]
+},
+{
+    brand: 'emerson',
+    brandName: 'Emerson',
+    color: '#E31837',
+    models: [
+        { 
+            name: 'Commander C200', 
+            desc: 'Compact AC drive for general applications', 
+            size: '12.4 MB', 
+            pdf: 'emerson-commander-c200.pdf', 
+            icon: '⚙️' 
+        },
+        { 
+            name: 'Commander C300', 
+            desc: 'High performance AC drive', 
+            size: '14.6 MB', 
+            pdf: 'emerson-commander-c300.pdf', 
+            icon: '🏭' 
+        },
+        { 
+            name: 'Unidrive M700', 
+            desc: 'Advanced industrial drive with onboard PLC', 
+            size: '21.3 MB', 
+            pdf: 'emerson-unidrive-m700.pdf', 
+            icon: '🚀' 
+        },
+        { 
+            name: 'Unidrive M400', 
+            desc: 'Standard performance drive', 
+            size: '16.8 MB', 
+            pdf: 'emerson-unidrive-m400.pdf', 
+            icon: '🎯' 
+        },
+        { 
+            name: 'Unidrive M200', 
+            desc: 'General purpose AC drive', 
+            size: '13.5 MB', 
+            pdf: 'emerson-unidrive-m200.pdf', 
+            icon: '🔧' 
+        }
+    ]
+},
+{
+    brand: 'vacon',
+    brandName: 'Vacon (Danfoss)',
+    color: '#FF6600',
+    models: [
+        { 
+            name: 'Vacon 100', 
+            desc: 'High performance AC drive', 
+            size: '17.2 MB', 
+            pdf: 'vacon-100.pdf', 
+            icon: '⚡' 
+        },
+        { 
+            name: 'Vacon 20', 
+            desc: 'Compact AC drive for machinery', 
+            size: '10.5 MB', 
+            pdf: 'vacon-20.pdf', 
+            icon: '📦' 
+        },
+        { 
+            name: 'Vacon NXP', 
+            desc: 'High power industrial drive', 
+            size: '24.8 MB', 
+            pdf: 'vacon-nxp.pdf', 
+            icon: '🏭' 
+        },
+        { 
+            name: 'Vacon 100 FLOW', 
+            desc: 'Drive for pump and fan applications', 
+            size: '15.6 MB', 
+            pdf: 'vacon-100-flow.pdf', 
+            icon: '💧' 
+        },
+        { 
+            name: 'Vacon NXS', 
+            desc: 'Heavy duty industrial drive', 
+            size: '19.4 MB', 
+            pdf: 'vacon-nxs.pdf', 
+            icon: '🔩' 
+        }
+    ]
+}
+        ];
+
+        // Set PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // State
+        let currentPdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        let scale = 1.5;
+        let currentPdfUrl = '';
+        let currentPdfFilename = '';
+
+        // Calculate totals
+        let totalModels = 0;
+        inverterData.forEach(brand => {
+            totalModels += brand.models.length;
+        });
+        document.getElementById('totalBrands').textContent = inverterData.length;
+        document.getElementById('totalModels').textContent = totalModels;
+
+        // Render brands
+        function renderBrands(filter = 'all', searchTerm = '') {
+            const container = document.getElementById('brandsContainer');
+            const noResults = document.getElementById('noResults');
+            container.innerHTML = '';
+            
+            let resultCount = 0;
+            
+            const filteredData = inverterData.filter(brand => {
+                if (filter !== 'all' && brand.brand !== filter) return false;
+                return true;
+            });
+            
+            filteredData.forEach(brand => {
+                const filteredModels = brand.models.filter(model => {
+                    if (!searchTerm) return true;
+                    const term = searchTerm.toLowerCase();
+                    return brand.brandName.toLowerCase().includes(term) ||
+                           model.name.toLowerCase().includes(term) ||
+                           model.desc.toLowerCase().includes(term);
+                });
+                
+                if (filteredModels.length === 0) return;
+                
+                resultCount += filteredModels.length;
+                
+                const section = document.createElement('div');
+                section.className = 'brand-section';
+                
+                section.innerHTML = `
+                    <div class="brand-header">
+                        <div class="brand-logo" style="background: ${brand.color}">
+                            ${brand.brandName.substring(0, 2).toUpperCase()}
+                        </div>
+                        <h2>${brand.brandName}</h2>
+                        <div class="model-count">📊 ${filteredModels.length} รุ่น</div>
+                    </div>
+                    <div class="models-grid">
+                        ${filteredModels.map(model => `
+                            <div class="model-card">
+                                <div class="feature-badge">🌐 แปลไทยได้</div>
+                                <div class="model-icon">${model.icon}</div>
+                                <h3>${model.name}</h3>
+                                <p>${model.desc}</p>
+                                <div class="file-info">
+                                    <span class="icon">📄</span>
+                                    <span>PDF Document</span>
+                                    <span style="margin-left: auto; opacity: 0.7;">${model.size}</span>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-view" onclick="viewPDF('${brand.brandName} ${model.name}', '${model.pdf}')">
+                                        👁️ ดู PDF
+                                    </button>
+                                    <button class="btn btn-download" onclick="downloadPDF('${model.pdf}')">
+                                        ⬇️ ดาวน์โหลด
+                                    </button>
+                                </div>
+                                <div class="btn-group-full">
+                                    <button class="btn btn-translate" onclick="showTranslateOptions('${model.pdf}')">
+                                        🌐 แปลเป็นภาษาไทย
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(section);
+            });
+            
+            noResults.style.display = resultCount === 0 ? 'block' : 'none';
+        }
+
+        // View PDF with PDF.js (ดูในเว็บ ไม่ต้องดาวน์โหลด)
+        async function viewPDF(title, filename) {
+            const modal = document.getElementById('pdfModal');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const container = document.getElementById('pdfContainer');
+            
+            // Set current PDF info
+            currentPdfFilename = filename;
+            currentPdfUrl = `manuals/${filename}`;
+            
+            // Show modal and loading
+            modal.classList.add('active');
+            loadingOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            document.getElementById('modalTitle').innerHTML = `📄 ${title}`;
+            container.innerHTML = '';
+            
+            try {
+                // Load PDF
+                const loadingTask = pdfjsLib.getDocument(currentPdfUrl);
+                currentPdfDoc = await loadingTask.promise;
+                totalPages = currentPdfDoc.numPages;
+                currentPage = 1;
+                
+                // Hide loading
+                loadingOverlay.classList.remove('active');
+                
+                // Render first page
+                await renderPage(currentPage);
+                updatePageInfo();
+                
+            } catch (error) {
+                loadingOverlay.classList.remove('active');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: white;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">❌</div>
+                        <h3>ไม่สามารถโหลด PDF ได้</h3>
+                        <p style="opacity: 0.7; margin-top: 10px;">${error.message}</p>
+                        <p style="opacity: 0.6; margin-top: 10px; font-size: 0.9rem;">
+                            ตรวจสอบว่าไฟล์ <code style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">${filename}</code> 
+                            อยู่ในโฟลเดอร์ <code style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">manuals/</code>
+                        </p>
+                        <button class="btn btn-download" style="margin-top: 20px;" onclick="downloadPDF('${filename}')">
+                            ⬇️ ลองดาวน์โหลดแทน
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Render specific page
+        async function renderPage(pageNum) {
+            if (!currentPdfDoc) return;
+            
+            const container = document.getElementById('pdfContainer');
+            container.innerHTML = '';
+            
+            try {
+                const page = await currentPdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: scale });
+                
+                const canvas = document.createElement('canvas');
+                canvas.className = 'pdf-canvas';
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                
+                await page.render(renderContext).promise;
+                container.appendChild(canvas);
+                
+            } catch (error) {
+                console.error('Error rendering page:', error);
+            }
+        }
+
+        // Update page info display
+        function updatePageInfo() {
+            document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
+        }
+
+        // Navigation
+        document.getElementById('prevPage').addEventListener('click', async () => {
+            if (currentPage > 1) {
+                currentPage--;
+                await renderPage(currentPage);
+                updatePageInfo();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', async () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                await renderPage(currentPage);
+                updatePageInfo();
+            }
+        });
+
+        // Zoom
+        document.getElementById('zoomIn').addEventListener('click', async () => {
+            scale += 0.25;
+            await renderPage(currentPage);
+        });
+
+        document.getElementById('zoomOut').addEventListener('click', async () => {
+            if (scale > 0.5) {
+                scale -= 0.25;
+                await renderPage(currentPage);
+            }
+        });
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('pdfModal').classList.remove('active');
+            document.getElementById('pdfContainer').innerHTML = '';
+            currentPdfDoc = null;
+            document.body.style.overflow = '';
+        }
+
+        // Download PDF
+        function downloadPDF(filename) {
+            const link = document.createElement('a');
+            link.href = `manuals/${filename}`;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Download current PDF from modal
+        function downloadCurrentPDF() {
+            if (currentPdfFilename) {
+                downloadPDF(currentPdfFilename);
+            }
+        }
+
+        // Show translate options
+        function showTranslateOptions(filename) {
+            currentPdfFilename = filename;
+            currentPdfUrl = `manuals/${filename}`;
+            document.getElementById('langModal').classList.add('active');
+        }
+
+        // Translate current PDF (from modal)
+        function translateCurrentPDF() {
+            if (currentPdfFilename) {
+                showTranslateOptions(currentPdfFilename);
+            }
+        }
+
+        // Open Google Translate
+        function openGoogleTranslate(targetLang) {
+            closeLangModal();
+            
+            // Get full URL
+            const fullUrl = window.location.origin + window.location.pathname + currentPdfUrl;
+            
+            // Open Google Translate with the PDF URL
+            const translateUrl = `https://translate.google.com/translate?sl=en&tl=${targetLang}&u=${encodeURIComponent(fullUrl)}`;
+            
+            window.open(translateUrl, '_blank');
+        }
+
+        // Close language modal
+        function closeLangModal() {
+            document.getElementById('langModal').classList.remove('active');
+        }
+
+        // Event listeners
+        document.querySelectorAll('.brand-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderBrands(this.dataset.brand, document.getElementById('searchInput').value);
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const activeBrand = document.querySelector('.brand-btn.active').dataset.brand;
+            renderBrands(activeBrand, this.value);
+        });
+
+        // Close modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeLangModal();
+            }
+        });
+
+        // Close lang modal on outside click
+        document.getElementById('langModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLangModal();
+        });
+
+        // Initial render
+        setTimeout(() => {
+            renderBrands();
+        }, 500);
+    </script>
+</body>
+</html>
