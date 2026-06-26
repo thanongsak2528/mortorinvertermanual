@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Inverter Manual Hub - คู่มืออินเวอร์เตอร์ประเทศไทย</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --secondary: #7c3aed;
+            --accent: #06ffa5;
+            --dark: #050812;
+            --darker: #020510;
+            --light: #f1f5f9;
+            --glass: rgba(5, 8, 18, 0.6);
+            --glass-border: rgba(0, 212, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ============ ANIMATED BACKGROUND ============ */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Background Selector */
+        .bg-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .bg-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .bg-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .bg-btn.active {
+            border-color: #333;
+            transform: scale(1.15);
+        }
+
+        .bg-btn.purple { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .bg-btn.redwhite { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+        .bg-btn.automation { background: linear-gradient(135deg, #00d4ff, #7c3aed); }
+
+        /* ============ HERO SECTION ============ */
+        .hero {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1581092160607-ee22621dd750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            filter: brightness(0.3) saturate(1.2);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(5, 8, 18, 0.75) 0%,
+                rgba(2, 5, 16, 0.6) 50%,
+                rgba(124, 58, 237, 0.3) 100%
+            );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 1200px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .hero-badge .pulse {
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideUp 0.8s ease-out 0.2s backwards;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: slideUp 0.8s ease-out 0.4s backwards;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            animation: slideUp 0.8s ease-out 0.6s backwards;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ CONTAINER ============ */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        /* ============ SEARCH ============ */
+        .search-container {
+            max-width: 700px;
+            margin: -40px auto 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 8px 8px 30px;
+            border-radius: 60px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .search-box .icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            padding: 15px 10px;
+            background: transparent;
+            color: var(--light);
+            font-family: inherit;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        /* ============ BRAND FILTER ============ */
+        .brand-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 50px;
+            justify-content: center;
+        }
+
+        .brand-btn {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            color: var(--light);
+            font-family: inherit;
+        }
+
+        .brand-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .brand-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        /* ============ BRAND SECTION ============ */
+        .brand-section {
+            margin-bottom: 50px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-header {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 70%
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .brand-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .model-count {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* ============ MODELS GRID ============ */
+        .models-grid {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+            padding: 30px;
+            border-radius: 0 0 20px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .model-card {
+            background: rgba(5, 8, 18, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .model-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 212, 255, 0.1),
+                transparent
+            );
+            transition: left 0.6s;
+        }
+
+        .model-card:hover::before {
+            left: 100%;
+        }
+
+        .model-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .model-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .model-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--light);
+        }
+
+        .model-card p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .file-info .icon {
+            color: var(--accent);
+        }
+
+        .file-info .file-size {
+            margin-left: auto;
+            opacity: 0.7;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, var(--primary), #0099cc);
+            color: white;
+        }
+
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--accent), #00cc88);
+            color: var(--dark);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(6, 255, 165, 0.4);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            display: none;
+        }
+
+        .no-results .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* ============ PROCESS MANUALS SECTION ============ */
+        .process-section {
+            margin: 60px auto;
+            max-width: 1400px;
+            padding: 0 20px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .process-header {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px 20px 0 0;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--secondary));
+        }
+
+        .process-header-content {
+            text-align: center;
+        }
+
+        .process-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .process-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .process-header p {
+            font-size: 1rem;
+            opacity: 0.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .process-grid {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+            border-radius: 0 0 20px 20px;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        .process-btn {
+            background: rgba(5, 8, 18, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--light);
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .process-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(6, 255, 165, 0.15),
+                transparent
+            );
+            transition: left 0.6s;
+        }
+
+        .process-btn:hover::before {
+            left: 100%;
+        }
+
+        .process-btn:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(6, 255, 165, 0.3);
+        }
+
+        .process-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 5px 15px rgba(6, 255, 165, 0.3));
+            transition: transform 0.3s;
+        }
+
+        .process-btn:hover .process-icon {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        .process-code {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+        }
+
+        .process-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            line-height: 1.3;
+        }
+
+        /* ============ PDF MODAL ============ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .modal-title-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .modal-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: inherit;
+        }
+
+        .modal-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-btn.close {
+            background: rgba(239, 68, 68, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            justify-content: center;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+
+        .modal-btn.close:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: rotate(90deg);
+        }
+
+        .page-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .page-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .page-input {
+            width: 50px;
+            padding: 5px 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .page-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow: hidden;
+            background: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .pdf-canvas-container {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .pdf-canvas {
+            max-width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out 2s;
+            pointer-events: none;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
+        }
+
+        .loading-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid var(--glass-border);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+        }
+
+        footer p {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        footer .heart {
+            color: #ef4444;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: 60vh;
+                min-height: 400px;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .models-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .brand-header {
+                padding: 20px;
+                flex-wrap: wrap;
+            }
+
+            .search-box {
+                flex-direction: column;
+                padding: 15px;
+                border-radius: 20px;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+
+            .modal-header {
+                padding: 10px 15px;
+            }
+
+            .modal-header h3 {
+                font-size: 1rem;
+            }
+
+            .modal-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+
+            .bg-selector {
+                top: 10px;
+                right: 10px;
+            }
+
+            .bg-btn {
+                width: 35px;
+                height: 35px;
+            }
+
+            .page-input {
+                width: 40px;
+            }
+
+            .process-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 20px;
+                gap: 15px;
+            }
+            
+            .process-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .process-code {
+                font-size: 1.4rem;
+            }
+            
+            .process-icon {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .process-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Background Selector -->
+    <div class="bg-selector">
+        <button class="bg-btn purple active" data-bg="purple" title="Purple Gradient">💜</button>
+        <button class="bg-btn redwhite" data-bg="redwhite" title="Red-White Modern">❤️</button>
+        <button class="bg-btn automation" data-bg="automation" title="Automation Tech">🤖</button>
+    </div>
+
+    <section class="hero">
+        <div class="hero-image"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="pulse"></span>
+                <span>คู่มืออินเวอร์เตอร์อันดับ 1 ของประเทศไทย</span>
+            </div>
+            <h1>⚡ Inverter Manual Hub</h1>
+            <p>รวมคู่มือการใช้งาน Motor Drive Inverter ทุกรุ่น<br>ดูออนไลน์และดาวน์โหลดได้ทันที</p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalBrands">9</div>
+                    <div class="stat-label">แบรนด์</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalModels">0</div>
+                    <div class="stat-label">รุ่น</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">พร้อมใช้งาน</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="search-container">
+            <div class="search-box">
+                <span class="icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="ค้นหายี่ห้อหรือรุ่น (เช่น ABB, ACS580, iP5A)">
+                <button class="search-btn">ค้นหา</button>
+            </div>
+        </div>
+
+        <div class="brand-filter">
+            <button class="brand-btn active" data-brand="all">🌐 ทั้งหมด</button>
+            <button class="brand-btn" data-brand="abb">ABB</button>
+            <button class="brand-btn" data-brand="danfoss">Danfoss</button>
+            <button class="brand-btn" data-brand="invt">INVT</button>
+            <button class="brand-btn" data-brand="ls">LS Electric</button>
+            <button class="brand-btn" data-brand="mitsubishi">Mitsubishi</button>
+            <button class="brand-btn" data-brand="delta">Delta</button>
+            <button class="brand-btn" data-brand="holip">HOLIP</button>
+            <button class="brand-btn" data-brand="emerson">Emerson</button>
+            <button class="brand-btn" data-brand="vacon">Vacon</button>
+        </div>
+
+        <div id="brandsContainer">
+            <div style="text-align: center; padding: 60px;">
+                <div class="loading-spinner" style="margin: 0 auto;"></div>
+                <p style="margin-top: 20px; opacity: 0.7;">กำลังโหลด...</p>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResults">
+            <div class="icon">🔍</div>
+            <h3>ไม่พบผลลัพธ์ที่ค้นหา</h3>
+            <p>ลองค้นหาด้วยคำอื่น หรือเลือกแบรนด์จากด้านบน</p>
+        </div>
+    </div>
+
+    <!-- Process Manuals Section -->
+    <section class="process-section" id="processSection">
+        <div class="process-header">
+            <div class="process-header-content">
+                <div class="process-badge">📋 PROCESS MANUALS</div>
+                <h2>คู่มือปฏิบัติงาน Process</h2>
+                <p>เอกสารคู่มือการปฏิบัติงานในกระบวนการผลิตทั้งหมด 7 ขั้นตอน</p>
+            </div>
+        </div>
+        <div class="process-grid">
+            <button class="process-btn" onclick="viewProcessPDF('ML', 'คู่มือ ML')">
+                <div class="process-icon">📘</div>
+                <div class="process-code">ML</div>
+                <div class="process-label">Maintenance Log</div>
+            </button>
+            <button class="process-btn" onclick="viewProcessPDF('EP', 'คู่มือ EP')">
+                <div class="process-icon">📗</div>
+                <div class="process-code">EP</div>
+                <div class="process-label">Engineering Process</div>
+            </button>
+            <button class="process-btn" onclick="viewProcessPDF('VP', 'คู่มือ VP')">
+                <div class="process-icon">📙</div>
+                <div class="process-code">VP</div>
+                <div class="process-label">Verification Process</div>
+            </button>
+            <button class="process-btn" onclick="viewProcessPDF('CF', 'คู่มือ CF')">
+                <div class="process-icon">📕</div>
+                <div class="process-code">CF</div>
+                <div class="process-label">Configuration</div>
+            </button>
+            <button class="process-btn" onclick="viewProcessPDF('PU', 'คู่มือ PU')">
+                <div class="process-icon">📔</div>
+                <div class="process-code">PU</div>
+                <div class="process-label">Production Unit</div>
+            </button>
+            <button class="process-btn" onclick="viewProcessPDF('RF', 'คู่มือ RF')">
+                <div class="process-icon">📒</div>
+                <div class="process-code">RF</div>
+                <div class="process-label">Request Form</div>
+            </button>
+            <button class="process-btn" onclick="viewProcessPDF('PK', 'คู่มือ PK')">
+                <div class="process-icon">📓</div>
+                <div class="process-code">PK</div>
+                <div class="process-label">Package & Packing</div>
+            </button>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Inverter Manual Hub | สร้างด้วย <span class="heart">❤️</span> สำหรับช่างไฟฟ้าไทย</p>
+    </footer>
+
+    <!-- PDF Viewer Modal -->
+    <div class="modal" id="pdfModal">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">กำลังโหลด PDF...</div>
+        </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <h3 id="modalTitle">📄 คู่มือ</h3>
+                </div>
+                <div class="modal-controls">
+                    <button class="modal-btn" id="prevPage" title="หน้าก่อนหน้า (↑)">◀ ก่อนหน้า</button>
+                    <div class="page-input-wrapper">
+                        <input type="number" class="page-input" id="pageInput" min="1" value="1">
+                        <span style="font-size: 0.85rem;">/</span>
+                        <span class="page-info" id="totalPages">-</span>
+                    </div>
+                    <button class="modal-btn" id="nextPage" title="หน้าถัดไป (↓)">ถัดไป ▶</button>
+                    <button class="modal-btn" id="zoomOut" title="ซูมออก">➖</button>
+                    <button class="modal-btn" id="zoomIn" title="ซูมเข้า">➕</button>
+                    <button class="modal-btn" onclick="downloadCurrentPDF()" title="ดาวน์โหลด">⬇️</button>
+                    <button class="modal-btn close" onclick="closeModal()" title="ปิด">✕</button>
+                </div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="pdf-canvas-container" id="pdfContainer"></div>
+                <div class="scroll-hint">🖱️ เลื่อนเมาส์ หรือ Swipe เพื่อเปลี่ยนหน้า</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ INVERTER DATABASE ============
+        const inverterData = [
+            {
+                brand: 'abb',
+                brandName: 'ABB',
+                color: '#FF0000',
+                models: [
+                    { name: 'ACS580', desc: 'General purpose drive, 0.75-500 kW', size: '15.2 MB', pdf: 'abb-acs580.pdf', icon: '⚙️' },
+                    { name: 'ACS880', desc: 'Industrial drive, single drive', size: '22.8 MB', pdf: 'abb-acs880.pdf', icon: '🏭' },
+                    { name: 'ACS380', desc: 'Machinery drive', size: '12.5 MB', pdf: 'abb-acs380.pdf', icon: '🔧' },
+                    { name: 'ACS180', desc: 'Compact machinery drive', size: '8.3 MB', pdf: 'abb-acs180.pdf', icon: '📦' },
+                    { name: 'ACH580', desc: 'HVAC drive', size: '14.7 MB', pdf: 'abb-ach580.pdf', icon: '❄️' }
+                ]
+            },
+            {
+                brand: 'danfoss',
+                brandName: 'Danfoss',
+                color: '#E31E24',
+                models: [
+                    { name: 'VLT FC 302', desc: 'AutomationDrive - High performance', size: '18.4 MB', pdf: 'danfoss-fc302.pdf', icon: '⚡' },
+                    { name: 'VLT FC 102', desc: 'HVAC Drive for buildings', size: '16.2 MB', pdf: 'danfoss-fc102.pdf', icon: '🏢' },
+                    { name: 'VLT FC 202', desc: 'Aqua Drive for water/wastewater', size: '14.8 MB', pdf: 'danfoss-fc202.pdf', icon: '💧' },
+                    { name: 'VLT FC 51', desc: 'Micro Drive - Compact', size: '6.5 MB', pdf: 'danfoss-fc51.pdf', icon: '📱' }
+                ]
+            },
+            {
+                brand: 'invt',
+                brandName: 'INVT',
+                color: '#0066CC',
+                models: [
+                    { name: 'GD200A', desc: 'General purpose vector control', size: '12.3 MB', pdf: 'invt-gd200a.pdf', icon: '🎯' },
+                    { name: 'GD350', desc: 'High performance inverter', size: '18.6 MB', pdf: 'invt-gd350.pdf', icon: '🚀' },
+                    { name: 'GD300', desc: 'Good Drive 300 - High performance multi-drive', size: '16.5 MB', pdf: 'invt-gd300.pdf', icon: '🚀' },
+                    { name: 'GD20', desc: 'Compact general purpose', size: '8.9 MB', pdf: 'invt-gd20.pdf', icon: '💎' },
+                    { name: 'GD10', desc: 'Mini vector inverter', size: '5.2 MB', pdf: 'invt-gd10.pdf', icon: '✨' },
+                    { name: 'CHF100A', desc: 'Vector control inverter', size: '10.4 MB', pdf: 'invt-chf100a.pdf', icon: '🔋' }
+                ]
+            },
+            {
+                brand: 'ls',
+                brandName: 'LS Electric',
+                color: '#003DA5',
+                models: [
+                    { name: 'iP5A', desc: 'High performance vector control', size: '14.2 MB', pdf: 'ls-ip5a.pdf', icon: '🎛️' },
+                    { name: 'iC5', desc: 'Compact general purpose', size: '9.8 MB', pdf: 'ls-ic5.pdf', icon: '📐' },
+                    { name: 'iG5A', desc: 'General purpose drive', size: '11.5 MB', pdf: 'ls-ig5a.pdf', icon: '⚙️' },
+                    { name: 'iV5', desc: 'High performance inverter', size: '16.7 MB', pdf: 'ls-iv5.pdf', icon: '🏆' },
+                    { name: 'iS7', desc: 'High performance vector control', size: '19.3 MB', pdf: 'ls-is7.pdf', icon: '💫' }
+                ]
+            },
+            {
+                brand: 'mitsubishi',
+                brandName: 'Mitsubishi',
+                color: '#E60012',
+                models: [
+                    { name: 'FR-A800', desc: 'High performance inverter', size: '21.3 MB', pdf: 'mitsubishi-fra800.pdf', icon: '💎' },
+                    { name: 'FR-E800', desc: 'Compact high performance', size: '15.8 MB', pdf: 'mitsubishi-fre800.pdf', icon: '🎯' },
+                    { name: 'FR-D700', desc: 'General purpose inverter', size: '12.4 MB', pdf: 'mitsubishi-frd700.pdf', icon: '⚡' }
+                ]
+            },
+            {
+                brand: 'delta',
+                brandName: 'Delta',
+                color: '#003DA5',
+                models: [
+                    { name: 'C2000 Plus', desc: 'High performance vector drive', size: '19.2 MB', pdf: 'delta-c2000.pdf', icon: '🚀' },
+                    { name: 'MS300', desc: 'Compact high performance', size: '13.6 MB', pdf: 'delta-ms300.pdf', icon: '💎' },
+                    { name: 'VFD-E', desc: 'General purpose drive', size: '10.8 MB', pdf: 'delta-vfd-e.pdf', icon: '⚙️' }
+                ]
+            },
+            {
+                brand: 'holip',
+                brandName: 'HOLIP',
+                color: '#003399',
+                models: [
+                    { name: 'HLP-C100', desc: 'General purpose vector control inverter', size: '11.8 MB', pdf: 'holip-hlp-c100.pdf', icon: '⚡' },
+                    { name: 'HLP-A', desc: 'High performance AC drive', size: '9.5 MB', pdf: 'holip-hlp-a.pdf', icon: '🎛️' },
+                    { name: 'HLP-NV', desc: 'Compact general purpose drive', size: '8.2 MB', pdf: 'holip-hlp-nv.pdf', icon: '💎' },
+                    { name: 'HLP-SP110', desc: 'Fan and pump inverter', size: '10.1 MB', pdf: 'holip-hlp-sp110.pdf', icon: '💨' },
+                    { name: 'HLP-CB', desc: 'Built-in EMC filter drive', size: '9.8 MB', pdf: 'holip-hlp-cb.pdf', icon: '🔌' }
+                ]
+            },
+            {
+                brand: 'emerson',
+                brandName: 'Emerson',
+                color: '#E31837',
+                models: [
+                    { name: 'Commander C200', desc: 'Compact AC drive for general applications', size: '12.4 MB', pdf: 'emerson-commander-c200.pdf', icon: '⚙️' },
+                    { name: 'Commander C300', desc: 'High performance AC drive', size: '14.6 MB', pdf: 'emerson-commander-c300.pdf', icon: '🏭' },
+                    { name: 'Unidrive M700', desc: 'Advanced industrial drive with onboard PLC', size: '21.3 MB', pdf: 'emerson-unidrive-m700.pdf', icon: '🚀' },
+                    { name: 'Unidrive M400', desc: 'Standard performance drive', size: '16.8 MB', pdf: 'emerson-unidrive-m400.pdf', icon: '🎯' },
+                    { name: 'Unidrive M200', desc: 'General purpose AC drive', size: '13.5 MB', pdf: 'emerson-unidrive-m200.pdf', icon: '🔧' }
+                ]
+            },
+            {
+                brand: 'vacon',
+                brandName: 'Vacon (Danfoss)',
+                color: '#FF6600',
+                models: [
+                    { name: 'Vacon 100', desc: 'High performance AC drive', size: '17.2 MB', pdf: 'vacon-100.pdf', icon: '⚡' },
+                    { name: 'Vacon 20', desc: 'Compact AC drive for machinery', size: '10.5 MB', pdf: 'vacon-20.pdf', icon: '📦' },
+                    { name: 'Vacon NXP', desc: 'High power industrial drive', size: '24.8 MB', pdf: 'vacon-nxp.pdf', icon: '🏭' },
+                    { name: 'Vacon 100 FLOW', desc: 'Drive for pump and fan applications', size: '15.6 MB', pdf: 'vacon-100-flow.pdf', icon: '💧' },
+                    { name: 'Vacon NXS', desc: 'Heavy duty industrial drive', size: '19.4 MB', pdf: 'vacon-nxs.pdf', icon: '🔩' }
+                ]
+            }
+        ];
+
+        // ============ PDF.JS SETUP ============
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        let currentPdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        let scale = 1.5;
+        let currentPdfUrl = '';
+        let currentPdfFilename = '';
+        let isMobile = window.innerWidth < 768;
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        // ============ CALCULATE TOTALS ============
+        let totalModels = 0;
+        inverterData.forEach(brand => {
+            totalModels += brand.models.length;
+        });
+        document.getElementById('totalBrands').textContent = inverterData.length;
+        document.getElementById('totalModels').textContent = totalModels;
+
+        // ============ RENDER BRANDS ============
+        function renderBrands(filter = 'all', searchTerm = '') {
+            const container = document.getElementById('brandsContainer');
+            const noResults = document.getElementById('noResults');
+            container.innerHTML = '';
+            
+            let resultCount = 0;
+            
+            const filteredData = inverterData.filter(brand => {
+                if (filter !== 'all' && brand.brand !== filter) return false;
+                return true;
+            });
+            
+            filteredData.forEach(brand => {
+                const filteredModels = brand.models.filter(model => {
+                    if (!searchTerm) return true;
+                    const term = searchTerm.toLowerCase();
+                    return brand.brandName.toLowerCase().includes(term) ||
+                           model.name.toLowerCase().includes(term) ||
+                           model.desc.toLowerCase().includes(term);
+                });
+                
+                if (filteredModels.length === 0) return;
+                
+                resultCount += filteredModels.length;
+                
+                const section = document.createElement('div');
+                section.className = 'brand-section';
+                
+                section.innerHTML = `
+                    <div class="brand-header">
+                        <div class="brand-logo" style="background: ${brand.color}">
+                            ${brand.brandName.substring(0, 2).toUpperCase()}
+                        </div>
+                        <h2>${brand.brandName}</h2>
+                        <div class="model-count">📊 ${filteredModels.length} รุ่น</div>
+                    </div>
+                    <div class="models-grid">
+                        ${filteredModels.map(model => `
+                            <div class="model-card">
+                                <div class="model-icon">${model.icon}</div>
+                                <h3>${model.name}</h3>
+                                <p>${model.desc}</p>
+                                <div class="file-info">
+                                    <span class="icon">📄</span>
+                                    <span>PDF Document</span>
+                                    <span class="file-size">${model.size}</span>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-view" onclick="viewPDF('${brand.brandName} ${model.name}', '${model.pdf}')">
+                                        👁️ ดู PDF
+                                    </button>
+                                    <button class="btn btn-download" onclick="downloadPDF('${model.pdf}')">
+                                        ⬇️ ดาวน์โหลด
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(section);
+            });
+            
+            noResults.style.display = resultCount === 0 ? 'block' : 'none';
+        }
+
+        // ============ PDF VIEWER WITH SCROLL ============
+        async function viewPDF(title, filename) {
+            const modal = document.getElementById('pdfModal');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const container = document.getElementById('pdfContainer');
+            
+            currentPdfFilename = filename;
+            currentPdfUrl = filename.includes('/') ? filename : `manuals/${filename}`;
+            
+            modal.classList.add('active');
+            loadingOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            document.getElementById('modalTitle').innerHTML = `📄 ${title}`;
+            container.innerHTML = '';
+            
+            try {
+                const loadingTask = pdfjsLib.getDocument(currentPdfUrl);
+                currentPdfDoc = await loadingTask.promise;
+                totalPages = currentPdfDoc.numPages;
+                currentPage = 1;
+                
+                document.getElementById('pageInput').max = totalPages;
+                document.getElementById('pageInput').value = currentPage;
+                document.getElementById('totalPages').textContent = totalPages;
+                
+                loadingOverlay.classList.remove('active');
+                await renderPage(currentPage);
+                updatePageInfo();
+                
+                setupScrollNavigation();
+                
+            } catch (error) {
+                loadingOverlay.classList.remove('active');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: white;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">❌</div>
+                        <h3>ไม่สามารถโหลด PDF ได้</h3>
+                        <p style="opacity: 0.7; margin-top: 10px;">${error.message}</p>
+                        <p style="opacity: 0.6; margin-top: 10px; font-size: 0.9rem;">
+                            ตรวจสอบว่าไฟล์ <code style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">${filename}</code> 
+                            อยู่ในโฟลเดอร์ที่ถูกต้อง
+                        </p>
+                        <button class="btn btn-download" style="margin-top: 20px;" onclick="downloadPDF('${filename}')">
+                            ⬇️ ลองดาวน์โหลดแทน
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        async function renderPage(pageNum) {
+            if (!currentPdfDoc) return;
+            
+            const container = document.getElementById('pdfContainer');
+            container.innerHTML = '';
+            
+            try {
+                const page = await currentPdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: scale });
+                
+                const canvas = document.createElement('canvas');
+                canvas.className = 'pdf-canvas';
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                
+                await page.render(renderContext).promise;
+                container.appendChild(canvas);
+                
+            } catch (error) {
+                console.error('Error rendering page:', error);
+            }
+        }
+
+        function updatePageInfo() {
+            document.getElementById('pageInput').value = currentPage;
+            document.getElementById('totalPages').textContent = totalPages;
+            
+            document.getElementById('prevPage').disabled = currentPage <= 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+        }
+
+        function setupScrollNavigation() {
+            const container = document.getElementById('pdfContainer');
+            
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (e.deltaY > 0) {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderPage(currentPage);
+                        updatePageInfo();
+                    }
+                } else {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderPage(currentPage);
+                        updatePageInfo();
+                    }
+                }
+            }, { passive: false });
+            
+            container.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            container.addEventListener('touchend', (e) => {
+                touchEndY = e.changedTouches[0].clientY;
+                handleSwipe();
+            }, { passive: true });
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartY - touchEndY;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderPage(currentPage);
+                        updatePageInfo();
+                    }
+                } else {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderPage(currentPage);
+                        updatePageInfo();
+                    }
+                }
+            }
+        }
+
+        document.getElementById('pageInput').addEventListener('change', (e) => {
+            let pageNum = parseInt(e.target.value);
+            if (pageNum >= 1 && pageNum <= totalPages) {
+                currentPage = pageNum;
+                renderPage(currentPage);
+                updatePageInfo();
+            } else {
+                e.target.value = currentPage;
+            }
+        });
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+                updatePageInfo();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+                updatePageInfo();
+            }
+        });
+
+        document.getElementById('zoomIn').addEventListener('click', async () => {
+            scale += 0.25;
+            await renderPage(currentPage);
+        });
+
+        document.getElementById('zoomOut').addEventListener('click', async () => {
+            if (scale > 0.5) {
+                scale -= 0.25;
+                await renderPage(currentPage);
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('pdfModal').classList.remove('active');
+            document.getElementById('pdfContainer').innerHTML = '';
+            currentPdfDoc = null;
+            document.body.style.overflow = '';
+        }
+
+        function downloadPDF(filename) {
+            const link = document.createElement('a');
+            link.href = filename.includes('/') ? filename : `manuals/${filename}`;
+            link.download = filename.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadCurrentPDF() {
+            if (currentPdfFilename) {
+                downloadPDF(currentPdfFilename);
+            }
+        }
+
+        // ============ PROCESS PDF VIEWER ============
+        function viewProcessPDF(code, title) {
+            const filename = `process/${code}.pdf`;
+            viewPDF(`📋 ${title}`, filename);
+        }
+
+        // ============ EVENT LISTENERS ============
+        document.querySelectorAll('.brand-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.brand-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderBrands(this.dataset.brand, document.getElementById('searchInput').value);
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const activeBrand = document.querySelector('.brand-btn.active').dataset.brand;
+            renderBrands(activeBrand, this.value);
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            if (currentPdfDoc) {
+                if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                    e.preventDefault();
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderPage(currentPage);
+                        updatePageInfo();
+                    }
+                }
+                if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                    e.preventDefault();
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderPage(currentPage);
+                        updatePageInfo();
+                    }
+                }
+            }
+        });
+
+        // Initial render
+        setTimeout(() => {
+            renderBrands();
+        }, 500);
+
+        // ============ BACKGROUND ANIMATIONS ============
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentBg = 'purple';
+        let animationId = null;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initBackground(currentBg);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Purple Gradient Background
+        let purpleParticles = [];
+        let purpleTime = 0;
+
+        function initPurple() {
+            purpleParticles = [];
+            for (let i = 0; i < 50; i++) {
+                purpleParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    hue: Math.random() * 60 + 240
+                });
+            }
+        }
+
+        function drawPurple() {
+            purpleTime += 0.005;
+            
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(0.5, '#764ba2');
+            gradient.addColorStop(1, '#f093fb');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height);
+                
+                for (let x = 0; x <= canvas.width; x += 10) {
+                    const y = canvas.height * 0.5 + 
+                        Math.sin(x * 0.005 + purpleTime + i) * 100 +
+                        Math.sin(x * 0.01 + purpleTime * 1.5 + i * 0.5) * 50;
+                    ctx.lineTo(x, y);
+                }
+                
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.lineTo(0, canvas.height);
+                ctx.closePath();
+                
+                const waveGradient = ctx.createLinearGradient(0, canvas.height * 0.3, 0, canvas.height);
+                waveGradient.addColorStop(0, `rgba(255, 255, 255, ${0.1 - i * 0.015})`);
+                waveGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                
+                ctx.fillStyle = waveGradient;
+                ctx.fill();
+            }
+            
+            purpleParticles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${0.6 + Math.sin(purpleTime + p.x * 0.01) * 0.4})`;
+                ctx.fill();
+            });
+            
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.3)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Red-White Modern Background
+        let redwhiteShapes = [];
+        let redwhiteTime = 0;
+
+        function initRedWhite() {
+            redwhiteShapes = [];
+            for (let i = 0; i < 15; i++) {
+                redwhiteShapes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 100 + 50,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotationSpeed: (Math.random() - 0.5) * 0.01,
+                    type: Math.random() > 0.5 ? 'circle' : 'square'
+                });
+            }
+        }
+
+        function drawRedWhite() {
+            redwhiteTime += 0.01;
+            
+            ctx.fillStyle = '#fafafa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = 'rgba(255, 65, 108, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 50;
+            
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            redwhiteShapes.forEach((shape, i) => {
+                shape.rotation += shape.rotationSpeed;
+                
+                ctx.save();
+                ctx.translate(shape.x, shape.y);
+                ctx.rotate(shape.rotation);
+                
+                const alpha = 0.1 + Math.sin(redwhiteTime + i) * 0.05;
+                ctx.fillStyle = `rgba(255, 65, 108, ${alpha})`;
+                
+                if (shape.type === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, shape.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(-shape.size/2, -shape.size/2, shape.size, shape.size);
+                }
+                
+                ctx.restore();
+            });
+            
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, 'rgba(255, 65, 108, 0.05)');
+            gradient.addColorStop(1, 'rgba(255, 75, 43, 0.1)');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Automation Tech Background
+        let autoHexagons = [];
+        let autoParticles = [];
+        let autoTime = 0;
+
+        function initAutomation() {
+            autoHexagons = [];
+            autoParticles = [];
+            
+            const hexSize = 40;
+            const cols = Math.ceil(canvas.width / (hexSize * 1.5)) + 2;
+            const rows = Math.ceil(canvas.height / (hexSize * Math.sqrt(3))) + 2;
+            
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (Math.random() > 0.7) {
+                        autoHexagons.push({
+                            x: c * hexSize * 1.5,
+                            y: r * hexSize * Math.sqrt(3) + (c % 2) * hexSize * Math.sqrt(3) / 2,
+                            size: hexSize,
+                            pulse: Math.random() * Math.PI * 2,
+                            active: Math.random() > 0.8
+                        });
+                    }
+                }
+            }
+            
+            for (let i = 0; i < 60; i++) {
+                autoParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 1,
+                    vy: (Math.random() - 0.5) * 1,
+                    size: Math.random() * 2 + 1
+                });
+            }
+        }
+
+        function drawHexagon(x, y, size, alpha, glowColor) {
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (Math.PI / 3) * i - Math.PI / 6;
+                const px = x + size * Math.cos(angle);
+                const py = y + size * Math.sin(angle);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            
+            if (glowColor) {
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = glowColor;
+                ctx.strokeStyle = glowColor;
+                ctx.lineWidth = 2;
+            } else {
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
+                ctx.lineWidth = 1;
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+        }
+
+        function drawAutomation() {
+            autoTime += 0.02;
+            
+            ctx.fillStyle = '#050812';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            autoHexagons.forEach(hex => {
+                const pulseAlpha = (Math.sin(autoTime + hex.pulse) + 1) / 2;
+                const alpha = 0.1 + pulseAlpha * 0.2;
+                
+                if (hex.active) {
+                    const hue = (autoTime * 30 + hex.pulse * 50) % 360;
+                    const glowColor = `hsla(${hue}, 100%, 60%, ${0.7})`;
+                    drawHexagon(hex.x, hex.y, hex.size * 0.9, alpha, glowColor);
+                } else {
+                    drawHexagon(hex.x, hex.y, hex.size * 0.9, alpha, null);
+                }
+            });
+            
+            autoParticles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = '#00d4ff';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#00d4ff';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+            
+            for (let i = 0; i < autoParticles.length; i++) {
+                for (let j = i + 1; j < autoParticles.length; j++) {
+                    const dx = autoParticles[i].x - autoParticles[j].x;
+                    const dy = autoParticles[i].y - autoParticles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 150) {
+                        const alpha = (1 - dist / 150) * 0.3;
+                        ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(autoParticles[i].x, autoParticles[i].y);
+                        ctx.lineTo(autoParticles[j].x, autoParticles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            for (let i = 0; i < 5; i++) {
+                const x = (autoTime * 50 + i * 200) % (canvas.width + 200) - 100;
+                ctx.strokeStyle = `rgba(124, 58, 237, ${0.2 + Math.sin(autoTime + i) * 0.1})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+        }
+
+        function initBackground(bg) {
+            switch(bg) {
+                case 'purple':
+                    initPurple();
+                    break;
+                case 'redwhite':
+                    initRedWhite();
+                    break;
+                case 'automation':
+                    initAutomation();
+                    break;
+            }
+        }
+
+        function animateBackground() {
+            switch(currentBg) {
+                case 'purple':
+                    drawPurple();
+                    break;
+                case 'redwhite':
+                    drawRedWhite();
+                    break;
+                case 'automation':
+                    drawAutomation();
+                    break;
+            }
+            
+            animationId = requestAnimationFrame(animateBackground);
+        }
+
+        // Background selector
+        document.querySelectorAll('.bg-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentBg = this.dataset.bg;
+                initBackground(currentBg);
+            });
+        });
+
+        resizeCanvas();
+        animateBackground();
+    </script>
+</body>
+</html>
